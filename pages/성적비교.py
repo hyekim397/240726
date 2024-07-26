@@ -8,7 +8,11 @@ import os
 file_path = 'score_refined.csv'  # Update this path
 
 # 데이터 읽기
-data = pd.read_csv(file_path)
+try:
+    data = pd.read_csv(file_path, encoding='euc-kr')  # 인코딩을 euc-kr로 지정
+except UnicodeDecodeError:
+    st.error('파일을 읽는 도중 인코딩 문제 발생. 파일 인코딩을 확인하세요.')
+    st.stop()
 
 # Streamlit 앱 설정
 st.title('학생별 중간 및 기말 점수 변화 추이 📈')
