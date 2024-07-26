@@ -2,9 +2,10 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
+import os
 
 # Load and clean the data
-file_path = 'daily_temp.csv'
+file_path = 'daily_temp.csv'  # Update the path to your CSV file
 data = pd.read_csv(file_path)
 data.columns = data.columns.str.strip()
 data['날짜'] = data['날짜'].str.strip()
@@ -21,39 +22,45 @@ yearly_stats = data.groupby('연도').agg({
 yearly_stats.rename(columns={'평균기온(℃)': '평균기온', '최저기온(℃)': '최저기온', '최고기온(℃)': '최고기온'}, inplace=True)
 
 # Configure the font to support Korean characters
-font_path = 'BAGLEFATONE-REGULAR.TTF'  
-font_prop = fm.FontProperties(fname=font_path)
-plt.rcParams['font.family'] = font_prop.get_name()
+# Use the absolute path for the font file
+current_dir = os.path.dirname(os.path.abspath(__file__))
+font_path = os.path.join(current_dir, 'fonts', 'BAGLEFATONE-REGULAR.TTF')
 
-# Streamlit app
-st.title('기온 데이터 시각화')
+if not os.path.exists(font_path):
+    st.error(f"Font file not found at {font_path}")
+else:
+    font_prop = fm.FontProperties(fname=font_path)
+    plt.rcParams['font.family'] = font_prop.get_name()
 
-# User selection for graph type
-graph_type = st.selectbox('그래프 유형을 선택하세요', ('꺾은선 그래프', '막대 그래프'))
+    # Streamlit app
+    st.title('연도별 평균, 최저, 최고 기온 변화 추이')
 
-if graph_type == '꺾은선 그래프':
-    # Plot line graph
-    fig, ax = plt.subplots()
-    ax.plot(yearly_stats['연도'], yearly_stats['평균기온'], label='평균기온')
-    ax.plot(yearly_stats['연도'], yearly_stats['최저기온'], label='최저기온')
-    ax.plot(yearly_stats['연도'], yearly_stats['최고기온'], label='최고기온')
-    ax.set_xlabel('연도')
-    ax.set_ylabel('기온 (℃)')
-    ax.set_title('기온 데이터 시각화')
-    ax.legend()
-    st.pyplot(fig)
-elif graph_type == '막대 그래프':
-    # Plot bar graph
-    fig, ax = plt.subplots()
-    bar_width = 0.25
-    index = yearly_stats['연도']
+    # User selection for graph type
+    graph_type = st.selectbox('그래프 유형을 선택하세요', ('꺾은선 그래프', '막대 그래프'))
 
-    ax.bar(index - bar_width, yearly_stats['평균기온'], bar_width, label='평균기온')
-    ax.bar(index, yearly_stats['최저기온'], bar_width, label='최저기온')
-    ax.bar(index + bar_width, yearly_stats['최고기온'], bar_width, label='최고기온')
+    if graph_type == '꺾은선 그래프':
+        # Plot line graph
+        fig, ax = plt.subplots()
+        ax.plot(yearly_stats['연도'], yearly_stats['평균기온'], label='평균기온')
+        ax.plot(yearly_stats['연도'], yearly_stats['최저기온'], label='최저기온')
+        ax.plot(yearly_stats['연도'], yearly_stats['최고기온'], label='최고기온')
+        ax.set_xlabel('연도')
+        ax.set_ylabel('기온 (℃)')
+        ax.set_title('연도별 평균, 최저, 최고 기온 꺾은선 그래프')
+        ax.legend()
+        st.pyplot(fig)
+    elif graph_type == '막대 그래프':
+        # Plot bar graph
+        fig, ax = plt.subplots()
+        bar_width = 0.25
+        index = yearly_stats['연도']
 
-    ax.set_xlabel('연도')
-    ax.set_ylabel('기온 (℃)')
-    ax.set_title('기온 데이터 시각화')
-    ax.legend()
-    st.pyplot(fig)
+        ax.bar(index - bar_width, yearly_stats['평균기온'], bar_width, label='평균기온')
+        ax.bar(index, yearly_stats['최저기온'], bar_width, label='최저기온')
+        ax.bar(index + bar_width, yearly_stats['최고기온'], bar_width, label='최고기온')
+
+        ax.set_xlabel('연도')
+        ax.set_ylabel('기온 (℃)')
+        ax.set_title('연도별 평균, 최저, 최고 기온 막대 그래프')
+        ax.legend()
+        st.pyplot(fig)
