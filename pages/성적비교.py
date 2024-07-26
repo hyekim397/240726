@@ -5,7 +5,7 @@ import koreanize_matplotlib
 import os
 
 # 파일 경로 설정
-file_path = 'score.csv'  # Update this path
+file_path = 'score_refined.csv'  # Update this path
 
 # 데이터 읽기
 data = pd.read_csv(file_path)
