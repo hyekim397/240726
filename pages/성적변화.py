@@ -9,7 +9,7 @@ file_path = 'score_refined.csv'  # Update this path
 
 # 데이터 읽기
 try:
-    data = pd.read_csv(file_path, encoding='euc-kr')  # 인코딩을 euc-kr로 지정
+    data = pd.read_csv(file_path, encoding='utf-8')  # 인코딩을 utf-8로 지정
 except UnicodeDecodeError:
     st.error('파일을 읽는 도중 인코딩 문제 발생. 파일 인코딩을 확인하세요.')
     st.stop()
