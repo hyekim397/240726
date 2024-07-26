@@ -21,7 +21,7 @@ yearly_stats = data.groupby('연도').agg({
 yearly_stats.rename(columns={'평균기온(℃)': '평균기온', '최저기온(℃)': '최저기온', '최고기온(℃)': '최고기온'}, inplace=True)
 
 # Configure the font to support Korean characters
-font_path = 'C:\Windows\Fonts\60sSTRIPE Regular'  
+font_path = 'BAGLEFATONE-REGULAR.TTF'  
 font_prop = fm.FontProperties(fname=font_path)
 plt.rcParams['font.family'] = font_prop.get_name()
 
